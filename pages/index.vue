@@ -159,10 +159,10 @@ clearMap()
     <Map
         :cells="cells"
         @cellClicked="toggleCell"/>
-
     <StatsBar
         :aliveCells="aliveCells"
         :ticks="ticks"
     />
+    <Help/>
   </div>
 </template>
