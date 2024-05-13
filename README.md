@@ -1,5 +1,8 @@
 # My game of life
 
+This repository contains the frontend part of a demo implementation of Conway's Game Of Life.
+
+
 ## Installation
 
 Follow these steps to set up your local development environment:
