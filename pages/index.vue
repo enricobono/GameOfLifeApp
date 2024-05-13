@@ -1,5 +1,6 @@
 <script setup>
 import StatsBar from "../components/StatsBar.vue";
+import Map from "../components/Map.vue";
 
 // Configuration
 const mapWidth = 50;
@@ -41,41 +42,43 @@ function isCellAlive(r, c) {
 function iterate() {
   ticks.value++
 
-  const togglingCells = []
+  const cellsToToggle = []
 
   for (let r = 0; r < mapHeight; r++) {
     for (let c = 0; c < mapWidth; c++) {
 
       let isAlive = isCellAlive(r, c)
-      let aliveCells = countAliveSurroundingCells(r, c);
+      let aliveNeighbours = countAliveNeighbours(r, c);
 
-
-      if (!isAlive && aliveCells === 3) {
-        togglingCells.push({r, c});
+      if (!isAlive && aliveNeighbours === 3) {
+        cellsToToggle.push({r, c});
       }
 
-      if (isAlive) {
-        if (aliveCells < 2 || aliveCells > 3) {
-          togglingCells.push({r: r, c: c});
-        }
+      if (!isAlive) {
+        continue;
       }
+
+      if (aliveNeighbours >= 2 && aliveNeighbours <= 3) {
+        continue
+      }
+
+      cellsToToggle.push({r: r, c: c});
     }
   }
 
   // Finally update the cells
-  for (let cell of togglingCells) {
+  for (let cell of cellsToToggle) {
     toggleCell(cell.r, cell.c)
   }
 
-  // Stop if no cells alive
+  // Stop if no more cells alive
   if (aliveCells.value === 0) {
     stopGame()
   }
 }
 
-
-function countAliveSurroundingCells(r, c) {
-  let aliveCells = 0
+function countAliveNeighbours(r, c) {
+  let aliveNeighbours = 0
 
   for (let offsetCol = -1; offsetCol <= 1; offsetCol++) {
     for (let offsetRow = -1; offsetRow <= 1; offsetRow++) {
@@ -100,11 +103,11 @@ function countAliveSurroundingCells(r, c) {
         continue
       }
 
-      aliveCells++
+      aliveNeighbours++
     }
   }
 
-  return aliveCells
+  return aliveNeighbours
 }
 
 function startGame() {
@@ -117,7 +120,6 @@ function stopGame() {
 }
 
 clearMap()
-
 
 </script>
 
@@ -137,22 +139,10 @@ clearMap()
           :ticks="ticks"
       />
     </div>
-    <div class="mt-2" id="map">
-
-      <div class="flex flex-col space-y-1 p-1 border-2 w-min">
-
-        <div v-for="(row, r) in cells">
-          <div class="flex flex-row space-x-1">
-            <div v-for="(cell, c) in row">
-              <Cell
-                  :r="r" :c="c" :isCellAlive="cell"
-                  @cellClicked="toggleCell(r, c)"
-              />
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <div class="mt-2">
+      <Map
+          :cells="cells"
+          @cellClicked="toggleCell"/>
     </div>
   </div>
 </template>
