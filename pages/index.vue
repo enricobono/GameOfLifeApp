@@ -1,22 +1,26 @@
 <script setup>
 import StatsBar from "../components/StatsBar.vue";
 import Map from "../components/Map.vue";
+import {useMapStore} from "../stores/mapStore";
+
+
+const mapStore = useMapStore()
 
 // Configuration
-const mapWidth = 50;
-const mapHeight = 30;
-const timeout = 125
+const mapCols = 50
+const mapRows = 30
+const border = 3
 
-const cells = ref([[]]);
+const timeout = 125
+const ticks = ref(0)
+const cells = ref([[]])
 const interval = ref(undefined)
 const aliveCells = ref(0)
-const ticks = ref(0)
-
 
 function clearMap() {
-  for (let r = 0; r < mapHeight; r++) {
+  for (let r = 0; r < mapRows; r++) {
     cells.value[r] = []
-    for (let c = 0; c < mapWidth; c++) {
+    for (let c = 0; c < mapCols; c++) {
       cells.value[r][c] = false
     }
   }
@@ -44,8 +48,8 @@ function iterate() {
 
   const cellsToToggle = []
 
-  for (let r = 0; r < mapHeight; r++) {
-    for (let c = 0; c < mapWidth; c++) {
+  for (let r = 0; r < mapRows; r++) {
+    for (let c = 0; c < mapCols; c++) {
 
       let isAlive = isCellAlive(r, c)
       let aliveNeighbours = countAliveNeighbours(r, c);
@@ -91,10 +95,10 @@ function countAliveNeighbours(r, c) {
       let neighbourCol = c + offsetRow
 
       // Out of map
-      if (neighbourRow < 0 || neighbourRow >= mapHeight) {
+      if (neighbourRow < 0 || neighbourRow >= mapRows) {
         continue
       }
-      if (neighbourCol < 0 || neighbourCol >= mapWidth) {
+      if (neighbourCol < 0 || neighbourCol >= mapCols) {
         continue
       }
 
@@ -119,30 +123,46 @@ function stopGame() {
   interval.value = undefined;
 }
 
+function createMap() {
+  clearMap();
+
+  mapStore.createMap(mapRows, mapCols, border).then((results) => {
+    cells.value = results
+
+    countAliveCells()
+  });
+}
+
+function countAliveCells() {
+  for (let r = 0; r < mapRows; r++) {
+    for (let c = 0; c < mapCols; c++) {
+      aliveCells.value += cells.value[r][c] ? 1 : 0
+    }
+  }
+}
+
 clearMap()
 
 </script>
 
 <template>
   <div class="w-min">
-    <div class="flex flex-row items-center justify-between">
-      <ButtonsBar
-          @startButtonClicked="startGame"
-          @nextTickButtonClicked="iterate"
-          @stopButtonClicked="stopGame"
-          @cleanButtonClicked="clearMap"
-          :isGameActive="interval !== undefined"
-          :aliveCells="aliveCells"
-      />
-      <StatsBar
-          :aliveCells="aliveCells"
-          :ticks="ticks"
-      />
-    </div>
-    <div class="mt-2">
-      <Map
-          :cells="cells"
-          @cellClicked="toggleCell"/>
-    </div>
+    <ButtonsBar
+        @startButtonClicked="startGame"
+        @nextTickButtonClicked="iterate"
+        @stopButtonClicked="stopGame"
+        @cleanButtonClicked="clearMap"
+        @loadMapButtonClicked="createMap"
+        :aliveCells="aliveCells"
+        :isGameActive="interval !== undefined"
+    />
+    <Map
+        :cells="cells"
+        @cellClicked="toggleCell"/>
+
+    <StatsBar
+        :aliveCells="aliveCells"
+        :ticks="ticks"
+    />
   </div>
 </template>

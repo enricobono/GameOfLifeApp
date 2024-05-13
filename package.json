@@ -1,6 +1,9 @@
 {
-  "name": "nuxt-app",
+  "name": "game-of-life-app",
+  "author": "Enrico Bono",
   "private": true,
+  "version": "0.1",
+  "description": "A frontend for a Game of Life demo app",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
