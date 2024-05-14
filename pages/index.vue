@@ -114,7 +114,7 @@ function countAliveNeighbours(r, c) {
   return aliveNeighbours
 }
 
-function startGame() {
+async function startGame() {
   interval.value = setInterval(iterate, timeout);
 }
 
@@ -123,7 +123,7 @@ function pauseGame() {
   interval.value = undefined;
 }
 
-function createMap() {
+async function createMap() {
   clearMap();
 
   mapStore.createMap(mapRows, mapCols, border).then((results) => {
@@ -141,8 +141,8 @@ function countAliveCells() {
   }
 }
 
-createMap()
-startGame()
+await createMap()
+await startGame()
 
 </script>
 
