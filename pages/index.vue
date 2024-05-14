@@ -77,7 +77,7 @@ function iterate() {
 
   // Stop if no more cells alive
   if (aliveCells.value === 0) {
-    stopGame()
+    pauseGame()
   }
 }
 
@@ -118,7 +118,7 @@ function startGame() {
   interval.value = setInterval(iterate, timeout);
 }
 
-function stopGame() {
+function pauseGame() {
   clearInterval(interval.value)
   interval.value = undefined;
 }
@@ -141,7 +141,8 @@ function countAliveCells() {
   }
 }
 
-clearMap()
+createMap()
+startGame()
 
 </script>
 
@@ -150,7 +151,7 @@ clearMap()
     <ButtonsBar
         @startButtonClicked="startGame"
         @nextTickButtonClicked="iterate"
-        @stopButtonClicked="stopGame"
+        @pauseButtonClicked="pauseGame"
         @cleanButtonClicked="clearMap"
         @loadMapButtonClicked="createMap"
         :aliveCells="aliveCells"

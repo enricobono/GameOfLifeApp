@@ -3,7 +3,7 @@
 const emit = defineEmits([
   'startButtonClicked',
   'nextTickButtonClicked',
-  'stopButtonClicked',
+  'pauseButtonClicked',
   'cleanButtonClicked',
   'loadMapButtonClicked'
 ])
@@ -40,9 +40,9 @@ defineProps({
       </button>
       <button
           class="bg-blue-600 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200
-        text-white px-4 py-1 mr-1 rounded-lg" @click="emit('stopButtonClicked')"
+        text-white px-4 py-1 mr-1 rounded-lg" @click="emit('pauseButtonClicked')"
           :disabled="!isGameActive">
-        Stop
+        Pause
       </button>
 
     </div>
