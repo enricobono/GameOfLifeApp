@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <div>
+  <div class="mt-2">
     Alive cells: {{ aliveCells }} - Ticks: {{ ticks }}
   </div>
 </template>

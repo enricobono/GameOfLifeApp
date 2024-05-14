@@ -8,7 +8,7 @@ const mapStore = useMapStore()
 
 // Configuration
 const mapCols = 50
-const mapRows = 30
+const mapRows = 20
 const border = 3
 
 const timeout = 125
